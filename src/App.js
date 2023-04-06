@@ -4,85 +4,97 @@ import { getDefaultNormalizer } from "@testing-library/react";
 import { DisplayUsers } from "./Q1/DisplayUsers";
 import { DisplayStationaryProducts } from "./Q2,3/DisplayStationaryProducts";
 import { DisplayUserInformation } from "./Q4/DisplayUserInformation";
+import { DisplayPersonsData } from "./Q5/DisplayPersonsData";
 import { useEffect, useState } from "react";
-
-// You can use your own images if you wish
 
 export const fakeFetch = (url) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (url === "https://example.com/api/user") {
+      if (url === "https://example.com/api/userchat") {
         resolve({
           status: 200,
           message: "Success",
           data: [
             {
-              name: "Saroj",
-              image:
-                "https://cdn.pixabay.com/photo/2017/06/13/13/06/girl-2398822_1280.jpg",
-              likes: 500,
-              comments: 10,
-            },
-            {
-              name: "Meeta",
-              image:
-                "https://cdn.pixabay.com/photo/2017/06/13/13/06/girl-2398822_1280.jpg",
-              likes: 200,
-              comments: 1,
-            },
-            {
               name: "Alia",
-              image:
-                "https://cdn.pixabay.com/photo/2017/06/13/13/06/girl-2398822_1280.jpg",
-              likes: 100,
-              comments: 5,
+              messages: [
+                {
+                  from: "Alia",
+                  message: "Good Morning",
+                },
+                {
+                  from: "Ranvir",
+                  message: "Good Morning, How are you?",
+                },
+              ],
+            },
+            {
+              name: "Jeena",
+              messages: [
+                {
+                  from: "Jeena",
+                  message: "When is the meeting scheduled?",
+                },
+                {
+                  from: "Seema",
+                  message: "It is at 10AM tomorrow.",
+                },
+              ],
+            },
+            {
+              name: "Abhay",
+              messages: [
+                {
+                  from: "Abhay",
+                  message: "Have you found a house yet?",
+                },
+                {
+                  from: "John",
+                  message: "No luck yet, still searching.",
+                },
+                {
+                  from: "Abhay",
+                  message:
+                    "Hey, an apartment just got vacant in my bulding. Do you wanna have a look?",
+                },
+              ],
             },
           ],
         });
       } else {
         reject({
           status: 404,
-          message: "users data not found.",
+          message: "users chat not found.",
         });
       }
     }, 2000);
   });
 };
+function DisplayChat() {
+  const [userChats, setUserChats] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-function DisplayPersonsData() {
-  const [personsData, setPersonsData] = useState([]);
-  const [isLoading, setIsloading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const getUserChats = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fakeFetch("https://example.com/api/userchat");
+      if (response.status === 200) {
+        setIsLoading(false);
+        setUserChats(response.data);
+      }
+    } catch (error) {}
+  };
 
   useEffect(() => {
-    getUserData();
+    getUserChats();
   }, []);
-  const getUserData = async () => {
-    try {
-      setIsloading(true);
-      const response = await fakeFetch("https://example.com/api/users");
-      if (response.status === 200) {
-        setIsloading(false);
-        setPersonsData(response.data);
-      }
-    } catch (error) {
-      setIsloading(false)
-      setIsError(true);
-    }
-  };
+
   return (
     <>
-      <h1>Question 5</h1>
-      <h3>User Feed</h3>
-      {isLoading && <p>isLoading...</p>}
-      {isError && <p>Sorry, Error Occured</p>}
-      {personsData.map(({ name, image, likes, comments }) => (
-        <div>
-          <h4>{name}</h4>
-          <img height="200px" width="200px" src={image} />
-          <p>Likes: {likes}</p>
-          <p>Comments: {comments}</p>
-        </div>
+      <h1>Question 6</h1>
+      {userChats.map(({ name, messages }) => (
+        <h3>{name}</h3>
+        <
       ))}
     </>
   );
@@ -91,10 +103,12 @@ function DisplayPersonsData() {
 function App() {
   return (
     <div className="App">
+      <h1>React Pset 5</h1>
       <DisplayUsers />
       <DisplayStationaryProducts />
       <DisplayUserInformation />
       <DisplayPersonsData />
+      <DisplayChat />
     </div>
   );
 }
