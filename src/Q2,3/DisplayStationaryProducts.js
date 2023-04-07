@@ -3,7 +3,7 @@ import { fakeFetch } from "./fakeFetch";
 
 export function DisplayStationaryProducts() {
   const [stationaryProducts, setStationaryProducts] = useState([]);
-  const [displayData, setDisplayData] = useState([stationaryProducts]);
+  const [displayData, setDisplayData] = useState(stationaryProducts);
   const [isQuantityFiltered, setIsQuantityFiltered] = useState(false);
   const [isPriceFiltered, setIsPriceFiltered] = useState(false);
 
